@@ -1,8 +1,10 @@
 package com.balajinagar.admin.io.entity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
-import java.util.List;
 
 @Entity
 @Table(name = "houses")
@@ -16,29 +18,32 @@ public class HouseEntity implements Serializable {
     @Column(nullable = false)
     private String houseNo;
 
+    @Column
+    private String plotNo;
+
+    @Column(nullable = false)
+    private String ownerName;
+
+    @Column(nullable = false)
+    private String noOfFloors;
+
     @Column(nullable = false)
     private String streetName;
 
-    @Column(nullable = false)
+    @Column
     private String areaName;
-
-    @Column
-    private String electricityBillNo;
-
-    @Column
-    private String gasConnectionNo;
-
-    @Column
-    private String propertyTaxNo;
-
-    @Column
-    private String waterTaxNo;
 
     @Column(nullable = false)
     private String type;
 
-    @OneToMany(mappedBy = "houseDetails", cascade = CascadeType.ALL)
-    private List<ResidentEntity> residents;
+    @Column(nullable = false)
+    private boolean vacant;
+
+    @Column(nullable = false)
+    private String ownerMobileNo;
+
+    @Column
+    private String rentAmount;
 
     public String getHouseId() {
         return houseId;
@@ -72,38 +77,6 @@ public class HouseEntity implements Serializable {
         this.areaName = areaName;
     }
 
-    public String getElectricityBillNo() {
-        return electricityBillNo;
-    }
-
-    public void setElectricityBillNo(String electricityBillNo) {
-        this.electricityBillNo = electricityBillNo;
-    }
-
-    public String getGasConnectionNo() {
-        return gasConnectionNo;
-    }
-
-    public void setGasConnectionNo(String gasConnectionNo) {
-        this.gasConnectionNo = gasConnectionNo;
-    }
-
-    public String getPropertyTaxNo() {
-        return propertyTaxNo;
-    }
-
-    public void setPropertyTaxNo(String propertyTaxNo) {
-        this.propertyTaxNo = propertyTaxNo;
-    }
-
-    public String getWaterTaxNo() {
-        return waterTaxNo;
-    }
-
-    public void setWaterTaxNo(String waterTaxNo) {
-        this.waterTaxNo = waterTaxNo;
-    }
-
     public String getType() {
         return type;
     }
@@ -112,11 +85,51 @@ public class HouseEntity implements Serializable {
         this.type = type;
     }
 
-    public List<ResidentEntity> getResidents() {
-        return residents;
+    public String getPlotNo() {
+        return plotNo;
     }
 
-    public void setResidents(List<ResidentEntity> residents) {
-        this.residents = residents;
+    public void setPlotNo(String plotNo) {
+        this.plotNo = plotNo;
+    }
+
+    public String getOwnerName() {
+        return ownerName;
+    }
+
+    public void setOwnerName(String ownerName) {
+        this.ownerName = ownerName;
+    }
+
+    public String getNoOfFloors() {
+        return noOfFloors;
+    }
+
+    public void setNoOfFloors(String noOfFloors) {
+        this.noOfFloors = noOfFloors;
+    }
+
+    public boolean isVacant() {
+        return vacant;
+    }
+
+    public void setVacant(boolean vacant) {
+        this.vacant = vacant;
+    }
+
+    public String getOwnerMobileNo() {
+        return ownerMobileNo;
+    }
+
+    public void setOwnerMobileNo(String ownerMobileNo) {
+        this.ownerMobileNo = ownerMobileNo;
+    }
+
+    public String getRentAmount() {
+        return rentAmount;
+    }
+
+    public void setRentAmount(String rentAmount) {
+        this.rentAmount = rentAmount;
     }
 }

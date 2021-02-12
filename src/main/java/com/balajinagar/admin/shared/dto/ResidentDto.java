@@ -17,7 +17,7 @@ public class ResidentDto {
     private String occupation;
     private String mobileNo;
     private String bloodGroup;
-    private HouseDto houseDetails;
+    private String houseId;
 
     public String getResidentId() {
         return residentId;
@@ -25,14 +25,6 @@ public class ResidentDto {
 
     public void setResidentId(String residentId) {
         this.residentId = residentId;
-    }
-
-    public HouseDto getHouseDetails() {
-        return houseDetails;
-    }
-
-    public void setHouseDetails(HouseDto houseDetails) {
-        this.houseDetails = houseDetails;
     }
 
     public String getFirstName() {
@@ -137,5 +129,13 @@ public class ResidentDto {
 
     public void setBloodGroup(String bloodGroup) {
         this.bloodGroup = bloodGroup;
+    }
+
+    public String getHouseId() {
+        return houseId;
+    }
+
+    public void setHouseId(String houseId) {
+        this.houseId = houseId;
     }
 }

@@ -23,16 +23,16 @@ public class ResidentEntity implements Serializable {
     @Column(nullable = false)
     private String sex;
 
-    @Column(nullable = false)
+    @Column
     private String aadhaarNo;
 
-    @Column(nullable = false)
+    @Column
     private String voterId;
 
     @Column(nullable = false)
     private Boolean familyHead;
 
-    @Column(nullable = false)
+    @Column
     private String fatherOrHusbandName;
 
     @Column(nullable = false)
@@ -44,17 +44,14 @@ public class ResidentEntity implements Serializable {
     @Column(nullable = false)
     private String occupation;
 
-    @Column(nullable = false, length = 12)
+    @Column(nullable = false, length = 10)
     private String mobileNo;
 
-    @Column(nullable = false)
+    @Column
     private String bloodGroup;
 
-    @ManyToOne
-    @JoinColumn(name = "houseId")
-    private HouseEntity houseDetails;
-
-
+    @Column(nullable = false)
+    private String houseId;
 
     public String getResidentId() {
         return residentId;
@@ -62,14 +59,6 @@ public class ResidentEntity implements Serializable {
 
     public void setResidentId(String residentId) {
         this.residentId = residentId;
-    }
-
-    public HouseEntity getHouseDetails() {
-        return houseDetails;
-    }
-
-    public void setHouseDetails(HouseEntity houseDetails) {
-        this.houseDetails = houseDetails;
     }
 
     public String getFirstName() {
@@ -174,5 +163,13 @@ public class ResidentEntity implements Serializable {
 
     public void setBloodGroup(String bloodGroup) {
         this.bloodGroup = bloodGroup;
+    }
+
+    public String getHouseId() {
+        return houseId;
+    }
+
+    public void setHouseId(String houseId) {
+        this.houseId = houseId;
     }
 }

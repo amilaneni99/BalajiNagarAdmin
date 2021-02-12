@@ -1,7 +1,5 @@
 package com.balajinagar.admin.ui.model.request;
 
-import com.balajinagar.admin.shared.dto.HouseDto;
-
 public class ResidentRequestModel {
     private String firstName;
     private String lastName;
@@ -16,15 +14,7 @@ public class ResidentRequestModel {
     private String occupation;
     private String mobileNo;
     private String bloodGroup;
-    private HouseDto houseDetails;
-
-    public HouseDto getHouseDetails() {
-        return houseDetails;
-    }
-
-    public void setHouseDetails(HouseDto houseDetails) {
-        this.houseDetails = houseDetails;
-    }
+    private String houseNo;
 
     public String getFirstName() {
         return firstName;
@@ -128,5 +118,13 @@ public class ResidentRequestModel {
 
     public void setBloodGroup(String bloodGroup) {
         this.bloodGroup = bloodGroup;
+    }
+
+    public String getHouseNo() {
+        return houseNo;
+    }
+
+    public void setHouseNo(String houseNo) {
+        this.houseNo = houseNo;
     }
 }

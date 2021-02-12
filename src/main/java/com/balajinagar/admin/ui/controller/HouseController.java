@@ -5,9 +5,10 @@ import com.balajinagar.admin.service.ResidentService;
 import com.balajinagar.admin.shared.dto.HouseDto;
 import com.balajinagar.admin.shared.dto.ResidentDto;
 import com.balajinagar.admin.ui.model.request.HouseRequestModel;
-import com.balajinagar.admin.ui.model.request.ResidentRequestModel;
 import com.balajinagar.admin.ui.model.response.HouseResponseModel;
 import com.balajinagar.admin.ui.model.response.OperationStatusModel;
+import com.balajinagar.admin.ui.model.response.ResidentResponseModel;
+import net.minidev.json.JSONObject;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/houses")
 public class HouseController {
 
@@ -26,10 +28,20 @@ public class HouseController {
     @Autowired
     ResidentService residentService;
 
+    @RequestMapping(value = "/nos",
+            method = RequestMethod.GET,
+            produces = { MediaType.APPLICATION_JSON_VALUE}
+    )
+    public JSONObject getNoOfHouses(){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("number",houseService.getNumberOfHouses());
+        return jsonObject;
+    }
+
     @RequestMapping(value = "/search",
                 params = "houseId",
                 method = RequestMethod.GET,
-                produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
+                produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
             )
     public HouseResponseModel getHouse(@RequestParam String houseId){
         HouseResponseModel returnValue;
@@ -44,7 +56,7 @@ public class HouseController {
     @RequestMapping(value = "/search",
             params = "houseNo",
             method = RequestMethod.GET,
-            produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
+            produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
     public HouseResponseModel getHouseByNo(@RequestParam String houseNo){
         HouseResponseModel returnValue;
@@ -59,7 +71,7 @@ public class HouseController {
     @RequestMapping(value = "/search",
             params = {"familyHeadName","page","limit"},
             method = RequestMethod.GET,
-            produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
+            produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
     public List<HouseResponseModel> getHouseByHeadName(@RequestParam String familyHeadName, @RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "limit", defaultValue = "2") int limit){
         List<HouseDto> houses = houseService.getHouseByHeadName(familyHeadName, page, limit);
@@ -74,12 +86,12 @@ public class HouseController {
     }
 
     @RequestMapping(value = "/search",
-            params = {"firstName","page","limit"},
+            params = {"residentName","page","limit"},
             method = RequestMethod.GET,
-            produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
+            produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
-    public List<HouseResponseModel> getHouseByFirstName(@RequestParam String firstName, @RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "limit", defaultValue = "2") int limit){
-        List<HouseDto> houses = houseService.getHouseByResidentName(firstName, page, limit);
+    public List<HouseResponseModel> getHouseByResidentName(@RequestParam String residentName, @RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "limit", defaultValue = "2") int limit){
+        List<HouseDto> houses = houseService.getHouseByResidentName(residentName, page, limit);
         List<HouseResponseModel> returnValue = new ArrayList<>();
 
         for (HouseDto houseDto : houses){
@@ -92,9 +104,9 @@ public class HouseController {
 
     @RequestMapping(value = "/search",
             method = RequestMethod.GET,
-            produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
+            produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
-    public List<HouseResponseModel> getAllHouses(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "limit", defaultValue = "2") int limit){
+    public List<HouseResponseModel> getAllHouses(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "limit", defaultValue = "5") int limit){
         List<HouseDto> houses = houseService.getHouses(page, limit);
         List<HouseResponseModel> returnValue = new ArrayList<>();
 
@@ -107,8 +119,8 @@ public class HouseController {
     }
 
     @PutMapping(path = "/{id}",
-            consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
-            produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
         )
     public HouseResponseModel updateHouse(@PathVariable String id, @RequestBody HouseRequestModel houseDetails){
         ModelMapper modelMapper = new ModelMapper();
@@ -119,45 +131,20 @@ public class HouseController {
         return returnVal;
     }
 
-    @PutMapping(path = "/{id}/addresident",
-            consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
-            produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
+    @DeleteMapping(path = "/{id}/deleteAllResidents",
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
-    public HouseResponseModel addResident(@PathVariable String id, @RequestBody ResidentRequestModel resident){
-        ModelMapper modelMapper = new ModelMapper();
-        ResidentDto residentDto = modelMapper.map(resident, ResidentDto.class);
-        HouseDto houseDto = houseService.getHouseDetails(id);
-        String houseNo = houseDto.getHouseNo();
-        HouseDto updatedHouse = houseService.addResident(houseNo, residentDto);
-        HouseResponseModel returnVal = modelMapper.map(updatedHouse, HouseResponseModel.class);
-        return returnVal;
-    }
-
-    @PutMapping(path = "/{id}/deleteAllResidents",
-            consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
-            produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
-    )
-    public HouseResponseModel deleteAllResidents(@PathVariable String id){
-        ModelMapper modelMapper = new ModelMapper();
-        HouseDto updatedHouse = houseService.deleteAllResidents(id);
-        HouseResponseModel returnVal = modelMapper.map(updatedHouse, HouseResponseModel.class);
-        return returnVal;
-    }
-
-    @PutMapping(path = "/{id}/deleteResidents/{residentId}",
-            consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
-            produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
-    )
-    public HouseResponseModel deleteResident(@PathVariable String id, @PathVariable String residentId){
-        ModelMapper modelMapper = new ModelMapper();
-        HouseDto updatedHouse = houseService.deleteResident(id, residentId);
-        HouseResponseModel returnVal = modelMapper.map(updatedHouse, HouseResponseModel.class);
-        return returnVal;
+    public OperationStatusModel deleteAllResidents(@PathVariable String id){
+        OperationStatusModel operationStatusModel = new OperationStatusModel();
+        operationStatusModel.setOperationStatus("DELETE");
+        houseService.deleteAllResidents(id);
+        operationStatusModel.setOperationMessage("SUCCESS");
+        return operationStatusModel;
     }
 
     @PostMapping(
-            consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
-            produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
         )
     public HouseResponseModel createHouse(@RequestBody HouseRequestModel houseRequestModel){
        ModelMapper modelMapper = new ModelMapper();
@@ -171,21 +158,35 @@ public class HouseController {
     }
 
     @DeleteMapping(path = "/{id}",
-            produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
         )
     public OperationStatusModel deleteHouse(@PathVariable String id){
         OperationStatusModel operationStatusModel = new OperationStatusModel();
         operationStatusModel.setOperationStatus("DELETE");
         houseService.deleteHouse(id);
+        residentService.deleteAllResidentsByHouse(id);
         operationStatusModel.setOperationMessage("SUCCESS");
         return operationStatusModel;
     }
 
-    @GetMapping(path = "/{id}/residents",
-            produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
+    @GetMapping(path = "/{houseNo}/residents",
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
         )
-    public String getHouseResidents(){
-        return "House Residents Returned";
+    public List<ResidentResponseModel> getHouseResidents(@PathVariable String houseNo){
+        List<ResidentDto> residents = houseService.getAllResidents(houseNo);
+        List<ResidentResponseModel> returnValue = new ArrayList<>();
+
+        for(ResidentDto residentDto: residents) {
+            returnValue.add(new ModelMapper().map(residentDto, ResidentResponseModel.class));
+        }
+        return returnValue;
+    }
+
+    @GetMapping(path = "/streets",
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
+    )
+    public List<String> getStreetNames() {
+        return houseService.getStreetNames();
     }
 
 }

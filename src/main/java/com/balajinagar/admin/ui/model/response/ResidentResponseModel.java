@@ -15,6 +15,7 @@ public class ResidentResponseModel {
     private String occupation;
     private String mobileNo;
     private String bloodGroup;
+    private String houseNo;
 
     public String getResidentId() {
         return residentId;
@@ -126,5 +127,13 @@ public class ResidentResponseModel {
 
     public void setBloodGroup(String bloodGroup) {
         this.bloodGroup = bloodGroup;
+    }
+
+    public String getHouseNo() {
+        return houseNo;
+    }
+
+    public void setHouseNo(String houseNo) {
+        this.houseNo = houseNo;
     }
 }
